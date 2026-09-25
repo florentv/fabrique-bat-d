@@ -230,11 +230,11 @@ body { transition: background 1s ease, color 1s ease; }
 }
 .slide.no-image .slide-title { font-size: 3.5rem; }
 .slide-text {
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   line-height: 1.45;
   white-space: pre-line;
 }
-.slide.no-image .slide-text { font-size: 2.2rem; }
+.slide.no-image .slide-text { font-size: 1.95rem; }
 
 .news-empty {
   display: flex;
