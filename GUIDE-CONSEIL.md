@@ -2,9 +2,11 @@
 ## Mode d'emploi
 
 Le mini-site affiché sur la tablette est relié à trois tableaux Google Sheets : 
-* **actus** qui permet d'ajouter/supprimer/modifier une actualité
-* **infos** qui permet de modifier les infos en bas de page.
-* **config** qui permet de modifier les paramètres d'affichage.
+* **actus** qui permet d'ajouter/supprimer/modifier une actualité : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing 
+* **infos** qui permet de modifier les infos en bas de page : https://docs.google.com/spreadsheets/d/1TdVMvlzHhrDRHKBKn9zHS1B7fJAN5wGhc6XUUntArl8/edit?usp=sharing
+* **config** qui permet de modifier les paramètres d'affichage : https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing
+
+Vous devez posséder un compte Google et avoir les autorisations de modifier chaque Google Sheets.
 
 Les changements apparaissent sur l'écran **en 5 minutes au plus**. Il n'y a rien d'autre à faire.
 
@@ -69,3 +71,40 @@ Une ligne par bloc :
 - **Pas de données personnelles** : pas de noms de résidents, pas de numéro d'appartement, pas de code d'accès. L'écran est visible par tous les visiteurs.
 - Relisez-vous : l'écran est vu par tout l'immeuble 😉
 - En cas de souci (écran noir, informations figées), prévenez **Florent Vié**.
+
+---
+
+## Architecture technique
+
+### Hébergement
+Le mini-site est hébergé sur Github Pages. Voici le lien du dossier (repository) : https://github.com/florentv/fabrique-bat-d. 
+
+Ce dossier est administré par Florent Vié. Le contacter pour toute question ou demande de modification.
+
+### Mise à jour du site
+
+Le mini-site affiché sur la tablette est relié à trois tableaux Google Sheets : 
+* **actus** qui permet d'ajouter/supprimer/modifier une actualité : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing 
+* **infos** qui permet de modifier les infos en bas de page : https://docs.google.com/spreadsheets/d/1TdVMvlzHhrDRHKBKn9zHS1B7fJAN5wGhc6XUUntArl8/edit?usp=sharing
+* **config** qui permet de modifier les paramètres d'affichage : https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing
+
+### Rafraîchissement
+
+La page reste ouverte en permanence et relit ses sources en arrière-plan, sans se recharger. Si le contenu n'a pas changé, rien ne bouge à l'écran et le carrousel continue normalement.
+
+| Quoi | Quand | Réglage (`config.js`) |
+|---|---|---|
+| Actus, infos pratiques, réglages (Google Sheets) | toutes les 5 min | `refreshDataMinutes` |
+| Météo (Open-Meteo, gratuit et sans clé d'API) | toutes les 15 min | `refreshWeatherMinutes` |
+| Code du site (après un `git push`) | au rechargement complet de la page, chaque nuit à 3 h | `reloadHour` |
+| Heure et date | à la minute | — |
+
+Une modification dans un Google Sheet apparaît donc sur l'écran en 5 minutes au plus. Chaque lecture contourne les caches, pour ne jamais récupérer une ancienne version.
+
+En cas d'erreur ou de coupure réseau, les dernières données valides restent affichées et le pied de page indique « Hors ligne ». L'affichage reprend tout seul au retour de la connexion.
+
+### Affichage
+
+- **Actus** : seules celles qui sont actives et dans leur période (`debut` ≤ aujourd'hui ≤ `fin`) sont affichées. Elles apparaissent et disparaissent le jour dit, sans intervention. Un texte trop long est automatiquement réduit pour tenir sur l'écran.
+- **Thème nuit** : de 21 h à 7 h.
+- **Protection de l'écran** : léger décalage de quelques pixels toutes les 10 min, pour éviter que l'image se marque sur la dalle.
