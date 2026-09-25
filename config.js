@@ -16,7 +16,7 @@ window.CONFIG = {
   refreshDataMinutes: 1,      // relecture du Google Sheet
   refreshWeatherMinutes: 15,  // relecture de la météo
   reloadHour: 3,              // rechargement complet de la page chaque nuit (heure)
-  nightStart: 21,             // thème sombre à partir de…
+  nightStart: 16,             // thème sombre à partir de…
   nightEnd: 7,                // …jusqu'à
   defaultSlideSeconds: 12,    // durée d'affichage d'une actu si non précisée dans le Sheet
 };
