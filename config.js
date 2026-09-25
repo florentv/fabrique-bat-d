@@ -13,7 +13,7 @@ window.CONFIG = {
     config: "https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing",
   },
 
-  refreshDataMinutes: 5,      // relecture du Google Sheet
+  refreshDataMinutes: 1,      // relecture du Google Sheet
   refreshWeatherMinutes: 15,  // relecture de la météo
   reloadHour: 3,              // rechargement complet de la page chaque nuit (heure)
   nightStart: 21,             // thème sombre à partir de…
