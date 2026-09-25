@@ -13,7 +13,7 @@ Ajoutez une ligne :
 |---|---|---|
 | **titre** | Court : 6 à 8 mots | Coupure d'eau jeudi matin |
 | **texte** | 2 ou 3 phrases. Pour aller à la ligne dans une cellule : Ctrl + Entrée | Jeudi 2 octobre de 9 h à 12 h… |
-| **categorie** | Au choix : Travaux, Vie de la copro, Événement, Sécurité… | Travaux |
+| **categorie** | Au choix : Travaux, Vie de la copro, Événement, Sécurité… ou **Urgent** (voir plus bas) | Travaux |
 | **image** | Facultatif : lien vers une photo (voir plus bas) | |
 | **debut** | Date d'apparition sur l'écran | 24/09/2026 |
 | **fin** | Date de disparition (l'actu est encore affichée ce jour-là) | 02/10/2026 |
@@ -22,6 +22,13 @@ Ajoutez une ligne :
 - Les actus défilent **dans l'ordre des lignes**. Déplacez une ligne pour changer l'ordre.
 - Une actu dont la date de fin est passée disparaît toute seule. Inutile de la supprimer.
 - Une actu trop longue est réduite automatiquement, mais un texte court reste bien plus lisible.
+
+### Actu urgente
+Écrivez **Urgent** dans la colonne `categorie`. L'actu :
+- passe **en premier** dans le défilement, quelle que soit sa ligne dans le tableau ;
+- s'affiche avec un **cadre rouge** et une étiquette ⚠ URGENT.
+
+À réserver aux vraies urgences (panne d'ascenseur, coupure d'eau imminente, sécurité…) pour qu'elles gardent leur effet. Pensez à mettre une date de **fin** proche.
 
 ### Ajouter une photo
 1. Déposez la photo dans le dossier Google Drive partagé du CS (format paysage de préférence).

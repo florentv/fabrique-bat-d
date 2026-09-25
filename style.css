@@ -26,6 +26,7 @@
   --line: #E3DED3;
   --accent: #7A5A32;
   --accent-soft: #EFE7DA;
+  --danger: #B3261E;
   --shadow: 0 0.1rem 0.6rem rgba(27, 35, 48, 0.06);
 
   --serif: "Fraunces", Georgia, "Times New Roman", serif;
@@ -44,6 +45,7 @@
   --line: #26303C;
   --accent: #D4B483;
   --accent-soft: #232B35;
+  --danger: #F2A29A;
   --shadow: none;
 }
 
@@ -221,6 +223,22 @@ body { transition: background 1s ease, color 1s ease; }
   border-radius: 99rem;
   letter-spacing: 0.04em;
 }
+/* Actu urgente : bandeau rouge et étiquette avec pictogramme */
+.slide.urgent {
+  border: 2px solid var(--danger);
+  border-top-width: 0.8rem;
+}
+.slide.urgent .slide-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--danger);
+  color: var(--surface);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.slide.urgent .slide-tag svg { width: 1.6rem; height: 1.6rem; stroke-width: 2.2; }
+
 .slide-title {
   font-family: var(--serif);
   font-weight: 600;
@@ -304,5 +322,4 @@ body { transition: background 1s ease, color 1s ease; }
 }
 .footer > span { overflow: hidden; text-overflow: ellipsis; }
 .footer > #status { flex-shrink: 0; }
-.footer .offline { color: #B3261E; font-weight: 700; }
-.night .footer .offline { color: #F2A29A; }
+.footer .offline { color: var(--danger); font-weight: 700; }
