@@ -1,6 +1,6 @@
 // Garde une copie du site pour qu'il redémarre même sans réseau.
 // Stratégie « réseau d'abord » : les mises à jour du site sont prises en compte immédiatement.
-const CACHE = "affichage-v1";
+const CACHE = "affichage-v2";
 const SHELL = [
   "./", "index.html", "style.css", "config.js", "icons.js", "app.js",
   "fonts/atkinson-400.woff2", "fonts/atkinson-700.woff2", "fonts/fraunces.woff2",
@@ -22,8 +22,10 @@ self.addEventListener("fetch", (e) => {
   // Seuls les fichiers du site passent par ici ; le Sheet et la météo ont leur propre cache.
   if (e.request.method !== "GET" || url.origin !== location.origin) return;
 
+  // cache: "no-cache" : on redemande toujours au serveur si le fichier a changé,
+  // sans attendre l'expiration du cache navigateur (10 min sur GitHub Pages).
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: "no-cache" })
       .then((res) => {
         if (res.ok) {
           const copy = res.clone();
