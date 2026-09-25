@@ -66,9 +66,23 @@ La tablette utilise déjà un navigateur en mode kiosque. Points à vérifier da
 
 ## Comportement automatique
 
-- **Données** : relues toutes les 5 min. En cas d'erreur ou de coupure, les dernières données valides restent affichées et le pied de page indique « Hors ligne ».
-- **Météo** : relue toutes les 15 min (Open-Meteo, gratuit et sans clé d'API).
-- **Actus** : seules celles qui sont actives et dans leur période (`debut` ≤ aujourd'hui ≤ `fin`) sont affichées. Un texte trop long est automatiquement réduit pour tenir sur l'écran.
+### Rafraîchissement
+
+La page reste ouverte en permanence et relit ses sources en arrière-plan, sans se recharger. Si le contenu n'a pas changé, rien ne bouge à l'écran et le carrousel continue normalement.
+
+| Quoi | Quand | Réglage (`config.js`) |
+|---|---|---|
+| Actus, infos pratiques, réglages (Google Sheets) | toutes les 5 min | `refreshDataMinutes` |
+| Météo (Open-Meteo, gratuit et sans clé d'API) | toutes les 15 min | `refreshWeatherMinutes` |
+| Code du site (après un `git push`) | au rechargement complet de la page, chaque nuit à 3 h | `reloadHour` |
+| Heure et date | à la minute | — |
+
+Une modification dans un Google Sheet apparaît donc sur l'écran en 5 minutes au plus. Chaque lecture contourne les caches, pour ne jamais récupérer une ancienne version.
+
+En cas d'erreur ou de coupure réseau, les dernières données valides restent affichées et le pied de page indique « Hors ligne ». L'affichage reprend tout seul au retour de la connexion.
+
+### Affichage
+
+- **Actus** : seules celles qui sont actives et dans leur période (`debut` ≤ aujourd'hui ≤ `fin`) sont affichées. Elles apparaissent et disparaissent le jour dit, sans intervention. Un texte trop long est automatiquement réduit pour tenir sur l'écran.
 - **Thème nuit** : de 21 h à 7 h.
-- **Rechargement complet** chaque nuit à 3 h.
 - **Protection de l'écran** : léger décalage de quelques pixels toutes les 10 min, pour éviter que l'image se marque sur la dalle.
