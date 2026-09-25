@@ -285,7 +285,7 @@ body { transition: background 1s ease, color 1s ease; }
 .info-text { min-width: 0; }
 .info-title { font-size: 1.4rem; color: var(--muted); }
 .info-detail {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
   margin-top: 0.15rem;
