@@ -50,41 +50,19 @@ Dans `actus`, ajouter une validation de données sur `actif` (liste `oui,non`) e
 > ⚠️ Toute personne qui a le lien peut lire les classeurs. N'y mettez rien qui ne pourrait pas être affiché dans le hall.
 > Le site relit les classeurs toutes les 5 minutes : une modification apparaît donc en 5 minutes au plus.
 
-## 3. Mettre en ligne (GitHub Pages)
+## 3. Mise en ligne (GitHub Pages)
 
-1. Créer un dépôt GitHub (en gratuit, il doit être public pour GitHub Pages ; seuls les liens des Google Sheets, en lecture seule, y figurent).
-2. Envoyer les fichiers du projet :
-   ```bash
-   git init && git add . && git commit -m "Affichage résidence"
-   git branch -M main
-   git remote add origin https://github.com/<compte>/affichage-residence.git
-   git push -u origin main
-   ```
-3. Sur GitHub : *Settings › Pages › Source : Deploy from a branch › main / (root)*.
-4. Le site est disponible à l'adresse `https://<compte>.github.io/affichage-residence/`.
+- Dépôt : https://github.com/florentv/fabrique-bat-d (public)
+- Site : **https://florentv.github.io/fabrique-bat-d/**. Publié depuis la branche `main`, à la racine (*Settings › Pages*).
 
-Chaque `git push` met le site à jour ; la tablette récupère la nouvelle version au plus tard lors du rechargement de 3 h du matin.
+Chaque `git push` sur `main` met le site à jour ; la tablette récupère la nouvelle version au plus tard lors du rechargement de 3 h du matin.
 
-## 4. Configurer la tablette
+## 4. Tablette
 
-Installer **Fully Kiosk Browser** depuis le Play Store et acheter la licence PLUS (environ 7 €, pour l'administration à distance). Dans les réglages :
-
-| Réglage | Valeur |
-|---|---|
-| Web Content Settings › Start URL | l'URL GitHub Pages |
-| Device Management › Keep Screen On | ✅ |
-| Device Management › Launch on Boot | ✅ |
-| Kiosk Mode › Enable Kiosk Mode | ✅ (définir un code PIN) |
-| Web Auto Reload › Auto Reload on Network Reconnect | ✅ |
-| Web Auto Reload › Auto Reload after Page Error | ✅ |
-| Device Management › Scheduled Sleep | par ex. extinction à 23:00, réveil à 06:30 |
-| Remote Administration (Fully Cloud) | ✅ pour surveiller et redémarrer à distance |
-| Motion Detection (facultatif) | allume l'écran quand quelqu'un passe |
-
-Côté Android :
-- désactiver la mise en veille automatique et les mises à jour automatiques du système ;
-- activer la limite de charge de la batterie (80 %) si l'appareil la propose ; une batterie branchée en permanence risque de gonfler ;
-- régler la luminosité à environ 70 %.
+La tablette utilise déjà un navigateur en mode kiosque. Points à vérifier dans ses réglages :
+- l'adresse de démarrage est l'URL du site ci-dessus ;
+- l'écran reste allumé, et l'application se lance au démarrage de la tablette ;
+- la page se recharge automatiquement après une coupure réseau ou une erreur, si le logiciel le permet.
 
 ## Comportement automatique
 
