@@ -258,7 +258,7 @@
 
   // ---------- Actualités ----------
 
-  const isUrgent = (n) => normalizeKey(n.categorie || "") === "urgent";
+  const isImportant = (n) => normalizeKey(n.categorie || "") === "important";
 
   function setNews(rows) {
     const today = startOfDay(new Date());
@@ -269,8 +269,8 @@
       if (end && end < today) return false;
       return true;
     });
-    // Les actus urgentes passent en tête (l'ordre du Sheet est conservé à l'intérieur de chaque groupe).
-    news.sort((a, b) => isUrgent(b) - isUrgent(a));
+    // Les actus importantes passent en tête (l'ordre du Sheet est conservé à l'intérieur de chaque groupe).
+    news.sort((a, b) => isImportant(b) - isImportant(a));
 
     const key = JSON.stringify(news);
     if (key === state.newsKey) return;      // rien n'a changé : on ne perturbe pas le défilement
@@ -293,15 +293,15 @@
     stage.innerHTML = state.news.map((n) => {
       const img = imageUrl(n.image);
       const start = parseDate(n.debut);
-      const urgent = isUrgent(n);
+      const important = isImportant(n);
       const meta = [
         n.categorie
-          ? `<span class="slide-tag">${urgent ? INFO_ICONS.urgence : ""}${escapeHtml(n.categorie)}</span>`
+          ? `<span class="slide-tag">${escapeHtml(n.categorie)}</span>`
           : "",
         start ? `<span>${escapeHtml(fmtShort.format(start))}</span>` : "",
       ].join("");
       return `
-        <article class="slide card ${img ? "" : "no-image"} ${urgent ? "urgent" : ""}">
+        <article class="slide card ${img ? "" : "no-image"} ${important ? "important" : ""}">
           ${img ? `<div class="slide-image" style="background-image:url('${encodeURI(img)}')"></div>` : ""}
           <div class="slide-body">
             ${meta ? `<div class="slide-meta">${meta}</div>` : ""}

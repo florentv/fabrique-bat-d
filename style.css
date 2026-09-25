@@ -223,21 +223,14 @@ body { transition: background 1s ease, color 1s ease; }
   border-radius: 99rem;
   letter-spacing: 0.04em;
 }
-/* Actu urgente : bandeau rouge et étiquette avec pictogramme */
-.slide.urgent {
-  border: 2px solid var(--danger);
-  border-top-width: 0.8rem;
-}
-.slide.urgent .slide-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+/* Actu importante : liseré rouge et étiquette rouge */
+.slide.important { border: 0.25rem solid var(--danger); }
+.slide.important .slide-tag {
   background: var(--danger);
   color: var(--surface);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.slide.urgent .slide-tag svg { width: 1.6rem; height: 1.6rem; stroke-width: 2.2; }
 
 .slide-title {
   font-family: var(--serif);
