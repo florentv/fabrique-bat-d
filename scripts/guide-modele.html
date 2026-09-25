@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Guide du conseil syndical</title>
+<style>
+  @font-face { font-family: "Atkinson"; src: url("../fonts/atkinson-400.woff2") format("woff2"); font-weight: 400; }
+  @font-face { font-family: "Atkinson"; src: url("../fonts/atkinson-700.woff2") format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Fraunces"; src: url("../fonts/fraunces.woff2") format("woff2"); font-weight: 100 900; }
+
+  @page { size: A4; margin: 16mm 18mm; }
+
+  :root { --ink: #1B2330; --muted: #555D69; --line: #E3DED3; --accent: #7A5A32; --soft: #F4F1EA; }
+
+  body {
+    margin: 0;
+    font-family: "Atkinson", "Helvetica Neue", Arial, "Noto Color Emoji", sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.15; break-after: avoid; }
+  h1 { font-size: 24pt; margin: 0 0 2pt; }
+  h1 + h2 { margin-top: 0; color: var(--accent); font-size: 14pt; border: none; padding: 0; }
+  h2 { font-size: 15pt; margin: 18pt 0 8pt; padding-bottom: 4pt; border-bottom: 1.5pt solid var(--ink); }
+  h3 { font-size: 12pt; margin: 14pt 0 4pt; color: var(--accent); }
+  p, ul, ol { margin: 0 0 8pt; }
+  p:has(+ table) { break-after: avoid; }
+  li { margin-bottom: 2pt; }
+  hr { border: none; margin: 6pt 0; }
+  strong { font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 10pt; break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border: 0.75pt solid var(--line); }
+  th { background: var(--soft); font-weight: 700; }
+
+  code {
+    font-family: "Atkinson", monospace;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--soft);
+    padding: 0 3pt;
+    border-radius: 3pt;
+  }
+</style>
+</head>
+<body>
+{{CONTENU}}
+</body>
+</html>

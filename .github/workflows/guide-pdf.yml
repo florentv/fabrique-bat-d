@@ -1,0 +1,42 @@
+# Régénère GUIDE-CONSEIL.pdf à chaque modification du guide, puis l'enregistre dans le dépôt.
+name: PDF du guide
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - GUIDE-CONSEIL.md
+      - scripts/guide-pdf.sh
+      - scripts/guide-modele.html
+  workflow_dispatch:   # lancement manuel possible depuis l'onglet Actions
+
+permissions:
+  contents: write
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Police des emojis
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq fonts-noto-color-emoji
+
+      - name: Générer le PDF
+        run: scripts/guide-pdf.sh
+        env:
+          CHROME: google-chrome
+          CHROME_FLAGS: --no-sandbox
+
+      - name: Enregistrer le PDF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add GUIDE-CONSEIL.pdf
+          git diff --cached --quiet && exit 0
+          git commit -m "PDF du guide mis à jour"
+          git push
