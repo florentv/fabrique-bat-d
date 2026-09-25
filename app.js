@@ -8,6 +8,7 @@
   // Paramètres d'aperçu : ?slide=2 (démarrer sur la 2e actu), ?theme=nuit ou ?theme=jour
   const params = new URLSearchParams(location.search);
   const forcedTheme = params.get("theme");
+  const forcedStyle = params.get("style");
 
   const state = {
     settings: {},
@@ -145,8 +146,23 @@
 
   // ---------- En-tête ----------
 
+  // Thème graphique : ?style= dans l'adresse, sinon ligne « style » du classeur config, sinon config.js.
+  // Le thème classique est toujours chargé ; un autre thème s'y superpose et ne redéfinit que ce qui change.
+  // Un nom inconnu ramène au thème classique.
+  function applyStyle() {
+    const wanted = normalizeKey(forcedStyle || state.settings.style || C.style || "");
+    const name = C.styles.includes(wanted) ? wanted : "classique";
+    const link = $("theme-css");
+    const href = name === "classique" ? null : `themes/${name}.css`;
+    if (link.getAttribute("href") !== href) {
+      if (href) link.setAttribute("href", href); else link.removeAttribute("href");
+    }
+    document.documentElement.dataset.style = name;
+  }
+
   function renderSettings() {
     const s = state.settings;
+    applyStyle();
     const name = s.nom_residence || "Résidence";
     $("residence-name").textContent = name;
     $("residence-address").textContent = s.adresse || "";
@@ -367,6 +383,7 @@
 
   // ---------- Démarrage ----------
 
+  applyStyle();
   tickClock();
   setInterval(tickClock, 1000);
   refreshData();

@@ -1,0 +1,36 @@
+/* Thème « classique » (par défaut) : ivoire, encre, bronze, titres Fraunces.
+   Toujours chargé : c'est la base de tous les thèmes.
+
+   Pour créer un thème : copier themes/_modele.css en themes/<nom>.css, redéfinir uniquement
+   les variables qui changent (jour dans :root, nuit dans .night), puis ajouter <nom> à
+   « styles » dans config.js. Un thème peut aussi surcharger n'importe quelle règle de style.css. */
+
+/* Palette jour : ivoire, encre, bronze */
+:root {
+  --bg: #F4F1EA;
+  --surface: #FFFFFF;
+  --ink: #1B2330;
+  --muted: #555D69;
+  --line: #E3DED3;
+  --accent: #7A5A32;
+  --accent-soft: #EFE7DA;
+  --danger: #B3261E;
+  --shadow: 0 0.1rem 0.6rem rgba(27, 35, 48, 0.06);
+
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sans: "Atkinson", "Helvetica Neue", Arial, sans-serif;
+  --radius: 1.2rem;
+}
+
+/* Palette nuit */
+.night {
+  --bg: #0F141B;
+  --surface: #182029;
+  --ink: #ECE8E0;
+  --muted: #A3ABB6;
+  --line: #26303C;
+  --accent: #D4B483;
+  --accent-soft: #232B35;
+  --danger: #F2A29A;
+  --shadow: none;
+}

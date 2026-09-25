@@ -13,6 +13,11 @@ window.CONFIG = {
     config: "https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing",
   },
 
+  // Thèmes graphiques disponibles (fichiers du dossier themes/) et thème par défaut.
+  // Le thème peut aussi être choisi dans le classeur config (ligne « style ») ou dans l'adresse (?style=nom).
+  styles: ["classique"],
+  style: "classique",
+
   refreshDataMinutes: 1,      // relecture du Google Sheet
   refreshWeatherMinutes: 15,  // relecture de la météo
   reloadHour: 3,              // rechargement complet de la page chaque nuit (heure)

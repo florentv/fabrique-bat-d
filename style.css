@@ -17,36 +17,10 @@
   font-display: swap;
 }
 
-/* Palette jour : ivoire, encre, bronze */
+/* Les couleurs, polices et arrondis sont définis par le thème actif (dossier themes/). */
 :root {
-  --bg: #F4F1EA;
-  --surface: #FFFFFF;
-  --ink: #1B2330;
-  --muted: #555D69;
-  --line: #E3DED3;
-  --accent: #7A5A32;
-  --accent-soft: #EFE7DA;
-  --danger: #B3261E;
-  --shadow: 0 0.1rem 0.6rem rgba(27, 35, 48, 0.06);
-
-  --serif: "Fraunces", Georgia, "Times New Roman", serif;
-  --sans: "Atkinson", "Helvetica Neue", Arial, sans-serif;
-
   /* 1rem = 20px sur un écran 1080×1920, proportionnel sur tout autre écran portrait */
   font-size: min(calc(100vw / 54), calc(100vh / 96));
-}
-
-/* Palette nuit */
-.night {
-  --bg: #0F141B;
-  --surface: #182029;
-  --ink: #ECE8E0;
-  --muted: #A3ABB6;
-  --line: #26303C;
-  --accent: #D4B483;
-  --accent-soft: #232B35;
-  --danger: #F2A29A;
-  --shadow: none;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -77,7 +51,7 @@ body { transition: background 1s ease, color 1s ease; }
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 1.2rem;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 

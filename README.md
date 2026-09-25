@@ -13,7 +13,8 @@ Open-Meteo ─────météo────▶
 
 | Fichier | Rôle |
 |---|---|
-| `index.html`, `style.css`, `app.js`, `icons.js` | Le site |
+| `index.html`, `style.css`, `app.js`, `icons.js` | Le site (`style.css` : mise en page commune à tous les thèmes) |
+| `themes/` | Thèmes graphiques : `classique.css` (par défaut, toujours chargé), `_modele.css` (point de départ pour un nouveau thème) |
 | `config.js` | Réglages techniques : coordonnées météo, liens des Google Sheets, horaires du thème nuit |
 | `data/*.csv` | Données d'exemple (utilisées si un lien est laissé vide dans `config.js`) et modèles d'import pour Google Sheets |
 | `sw.js` | Cache hors ligne : le site redémarre même sans Wi-Fi |
@@ -29,6 +30,25 @@ python3 -m http.server 8000
 Ouvrir http://localhost:8000. Dans Chrome, les outils de développement (mode appareil, 1080×1920) simulent la tablette.
 
 Paramètres d'aperçu : `?slide=3` démarre sur la 3e actu, `?theme=nuit` ou `?theme=jour` force le thème.
+
+## Thèmes graphiques
+
+Le thème **classique** est toujours chargé. Un autre thème s'y superpose et ne redéfinit que ce qui change (couleurs, polices, arrondis, voire des règles de style).
+
+**Créer un thème**
+1. Copier `themes/_modele.css` en `themes/<nom>.css` (minuscules, sans espace ni accent).
+2. Décommenter et modifier les variables voulues, pour le jour (`:root`) et la nuit (`.night`).
+3. Ajouter `<nom>` à la liste `styles` de `config.js`.
+
+**Choisir le thème affiché**, par ordre de priorité :
+
+| Où | Comment | Usage |
+|---|---|---|
+| Adresse | `?style=<nom>` (combinable avec `&theme=nuit`) | Tester sans rien modifier |
+| Classeur `config` | ligne `style` \| `<nom>` | Changer le thème de la tablette, en 1 minute, sans `git push` |
+| `config.js` | `style: "<nom>"` | Thème par défaut |
+
+Un nom inconnu, ou absent de la liste `styles`, ramène au thème classique.
 
 ## 2. Google Sheets
 

@@ -1,0 +1,28 @@
+/* Modèle de thème : copier ce fichier en themes/<nom>.css (minuscules, sans espace ni accent).
+   Tout ce qui n'est pas redéfini ici reste celui du thème classique.
+   Tester avec l'adresse …/?style=<nom> (et &theme=nuit pour la version nuit). */
+
+/* Jour */
+:root {
+  /* --bg: #F4F1EA;            fond de l'écran */
+  /* --surface: #FFFFFF;       fond des cartes */
+  /* --ink: #1B2330;           texte principal */
+  /* --muted: #555D69;         texte secondaire */
+  /* --line: #E3DED3;          bordures et séparateurs */
+  /* --accent: #7A5A32;        titres de section, icônes, barre de progression */
+  /* --accent-soft: #EFE7DA;   fond des étiquettes et pastilles d'icônes */
+  /* --danger: #B3261E;        actus « Important », hors ligne */
+  /* --shadow: 0 0.1rem 0.6rem rgba(27, 35, 48, 0.06); */
+  /* --serif: "Fraunces", Georgia, serif;          nom de la résidence, titres des actus */
+  /* --sans: "Atkinson", Arial, sans-serif;        tout le reste */
+  /* --radius: 1.2rem;         arrondi des cartes */
+}
+
+/* Nuit */
+.night {
+  /* --bg: #0F141B; */
+}
+
+/* Règles supplémentaires éventuelles, par ex. :
+.header { border-bottom-width: 4px; }
+*/

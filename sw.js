@@ -1,8 +1,8 @@
 // Garde une copie du site pour qu'il redémarre même sans réseau.
 // Stratégie « réseau d'abord » : les mises à jour du site sont prises en compte immédiatement.
-const CACHE = "affichage-v2";
+const CACHE = "affichage-v3";
 const SHELL = [
-  "./", "index.html", "style.css", "config.js", "icons.js", "app.js",
+  "./", "index.html", "style.css", "themes/classique.css", "config.js", "icons.js", "app.js",
   "fonts/atkinson-400.woff2", "fonts/atkinson-700.woff2", "fonts/fraunces.woff2",
 ];
 
