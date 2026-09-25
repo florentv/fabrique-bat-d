@@ -352,10 +352,17 @@
   function showSlide(i) {
     const slides = $("news-stage").children;
     [...slides].forEach((s, j) => s.classList.toggle("active", j === i));
-    [...$("news-steps").children].forEach((s, j) => s.classList.toggle("active", j === i));
     $("news-counter").textContent = state.news.length > 1 ? `${i + 1} / ${state.news.length}` : "";
 
     const seconds = +(state.news[i].duree || state.settings.duree_actu) || C.defaultSlideSeconds;
+
+    // Segments (thèmes qui les affichent) : ceux déjà vus sont pleins, celui en cours se remplit.
+    const steps = $("news-steps");
+    steps.style.setProperty("--slide-duration", `${seconds}s`);
+    [...steps.children].forEach((s, j) => {
+      s.classList.toggle("done", j < i);
+      s.classList.toggle("active", j === i);
+    });
     const bar = $("news-progress-bar");
     bar.style.transition = "none";
     bar.style.width = "0";
