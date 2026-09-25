@@ -14,7 +14,7 @@ Open-Meteo ─────météo────▶
 | Fichier | Rôle |
 |---|---|
 | `index.html`, `style.css`, `app.js`, `icons.js` | Le site (`style.css` : mise en page commune à tous les thèmes) |
-| `themes/` | Thèmes graphiques : `classique.css` (par défaut, toujours chargé), `_modele.css` (point de départ pour un nouveau thème) |
+| `themes/` | Thèmes graphiques : `classique.css` (base, toujours chargée), `moderne.css` (par défaut), `_modele.css` (point de départ pour un nouveau thème) |
 | `config.js` | Réglages techniques : coordonnées météo, liens des Google Sheets, horaires du thème nuit |
 | `data/*.csv` | Données d'exemple (utilisées si un lien est laissé vide dans `config.js`) et modèles d'import pour Google Sheets |
 | `sw.js` | Cache hors ligne : le site redémarre même sans Wi-Fi |
@@ -35,8 +35,8 @@ Paramètres d'aperçu : `?slide=3` démarre sur la 3e actu, `?theme=nuit` ou `?t
 
 | Thème | Style |
 |---|---|
-| `classique` (par défaut) | Ivoire, bronze, titres à empattements (Fraunces), texte Atkinson Hyperlegible |
-| `moderne` | Gris chaud, cuivre, sans-serif géométrique très grasse (Poppins), étiquettes au trait, progression des actus en segments |
+| `classique` | Ivoire, bronze, titres à empattements (Fraunces), texte Atkinson Hyperlegible |
+| `moderne` (par défaut) | Gris chaud, cuivre, sans-serif géométrique très grasse (Poppins), étiquettes au trait, progression des actus en segments |
 
 Le thème **classique** est toujours chargé. Un autre thème s'y superpose et ne redéfinit que ce qui change (couleurs, polices, arrondis, voire des règles de style).
 
