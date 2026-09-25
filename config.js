@@ -15,7 +15,7 @@ window.CONFIG = {
 
   // Thèmes graphiques disponibles (fichiers du dossier themes/) et thème par défaut.
   // Le thème peut aussi être choisi dans le classeur config (ligne « style ») ou dans l'adresse (?style=nom).
-  styles: ["classique"],
+  styles: ["classique", "moderne"],
   style: "classique",
 
   refreshDataMinutes: 1,      // relecture du Google Sheet

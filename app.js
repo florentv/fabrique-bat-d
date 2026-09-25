@@ -164,7 +164,11 @@
     const s = state.settings;
     applyStyle();
     const name = s.nom_residence || "Résidence";
-    $("residence-name").textContent = name;
+    // « La Fabrique - Bâtiment D » : chaque partie dans son span, pour que les thèmes puissent les distinguer.
+    const [main, sub] = name.split(/\s+[-–—]\s+/, 2);
+    $("residence-name").innerHTML = sub
+      ? `<span class="brand-main">${escapeHtml(main)}</span><span class="brand-sep"> - </span><span class="brand-sub">${escapeHtml(sub)}</span>`
+      : escapeHtml(name);
     $("residence-address").textContent = s.adresse || "";
     $("footer-note").textContent = s.message_pied || "";
     document.title = `${name} — Affichage`;
@@ -253,7 +257,7 @@
     $("weather-temp").textContent = `${Math.round(cur.temperature_2m)}°`;
     $("weather-desc").textContent = now.label;
     $("weather-extra").innerHTML =
-      `Ressenti ${Math.round(cur.apparent_temperature)}°<br>Vent ${Math.round(cur.wind_speed_10m)} km/h`;
+      `<span>Ressenti ${Math.round(cur.apparent_temperature)}°</span><span>Vent ${Math.round(cur.wind_speed_10m)} km/h</span>`;
 
     const days = d.daily.time.map((t, i) => ({
       date: new Date(`${t}T12:00:00`),
@@ -268,7 +272,7 @@
         <div class="weather-day-name">${i === 0 ? "Auj." : escapeHtml(fmtDay.format(day.date).replace(".", ""))}</div>
         <div class="weather-day-icon">${describe(day.code).icon}</div>
         <div class="weather-day-temp">${day.max}° <span class="min">${day.min}°</span></div>
-        <div class="weather-day-rain">${day.rain != null ? `Pluie ${day.rain} %` : ""}</div>
+        <div class="weather-day-rain">${day.rain != null ? `<span class="weather-day-min">min ${day.min}° · </span><span class="weather-day-rain-label">Pluie </span>${day.rain} %` : ""}</div>
       </li>`).join("");
   }
 
@@ -303,8 +307,11 @@
       stage.innerHTML = `<div class="slide card news-empty active">Aucune actualité pour le moment.</div>`;
       $("news-counter").textContent = "";
       $("news-progress-bar").style.width = "0";
+      $("news-steps").innerHTML = "";
       return;
     }
+
+    $("news-steps").innerHTML = state.news.length > 1 ? state.news.map(() => "<span></span>").join("") : "";
 
     stage.innerHTML = state.news.map((n) => {
       const img = imageUrl(n.image);
@@ -345,6 +352,7 @@
   function showSlide(i) {
     const slides = $("news-stage").children;
     [...slides].forEach((s, j) => s.classList.toggle("active", j === i));
+    [...$("news-steps").children].forEach((s, j) => s.classList.toggle("active", j === i));
     $("news-counter").textContent = state.news.length > 1 ? `${i + 1} / ${state.news.length}` : "";
 
     const seconds = +(state.news[i].duree || state.settings.duree_actu) || C.defaultSlideSeconds;

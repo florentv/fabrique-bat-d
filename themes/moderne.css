@@ -1,0 +1,157 @@
+/* Thème « moderne » : gris chaud, cuivre, sans-serif géométrique très grasse (Poppins),
+   étiquettes au trait, titres d'actus calés en bas de carte, progression en segments. */
+
+@font-face { font-family: "Poppins"; src: url("../fonts/poppins-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Poppins"; src: url("../fonts/poppins-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Poppins"; src: url("../fonts/poppins-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Poppins"; src: url("../fonts/poppins-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+/* Jour */
+:root {
+  --bg: #EFEDE8;
+  --surface: #FFFFFF;
+  --ink: #141414;
+  --muted: #6B6862;
+  --line: #E2DFD8;
+  --accent: #9A5519;
+  --accent-soft: #E4E1DA;
+  --shadow: none;
+  --serif: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  --sans: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  --radius: 0.5rem;
+}
+
+/* Nuit */
+.night {
+  --bg: #121212;
+  --surface: #1D1D1D;
+  --ink: #F2F0EB;
+  --muted: #A19D95;
+  --line: #2E2D2A;
+  --accent: #DB9A5E;
+  --accent-soft: #34322E;
+}
+
+.card { border-color: var(--line); }
+
+/* Petits libellés en capitales espacées */
+.section-title,
+.clock-date,
+.slide-meta,
+.weather-day-name {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+
+/* ---------- En-tête ---------- */
+.header { border-bottom-width: 0.2rem; padding-bottom: 1.4rem; }
+.brand-name {
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.brand-sep { display: none; }
+.brand-sub { display: block; color: var(--accent); }
+.brand-address { font-size: 1.3rem; margin-top: 0.6rem; }
+.clock-time {
+  font-size: 6.6rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+}
+.clock-date { font-size: 1.25rem; margin-top: 0.8rem; }
+
+/* ---------- Météo ---------- */
+.weather { padding: 1.4rem 2rem; gap: 1.2rem; }
+.weather-now { gap: 1.4rem; align-items: center; }
+.weather-icon { width: 4.4rem; height: 4.4rem; }
+.weather-icon svg { stroke-width: 1.6; }
+.weather-temp { font-size: 5rem; letter-spacing: -0.04em; line-height: 0.95; }
+.weather-desc { font-size: 1.4rem; font-weight: 700; margin-top: 0.2rem; }
+.weather-extra { font-size: 1.2rem; }
+.weather-extra span { display: inline; }
+.weather-extra span + span::before { content: " · "; }
+
+.weather-days { gap: 0; align-self: stretch; }
+.weather-day {
+  width: 8rem;
+  text-align: left;
+  padding: 0.2rem 1.2rem;
+  border-left: 1px solid var(--line);
+}
+.weather-day:first-child { border-left: 1px solid var(--line); }
+.weather-day-name { font-size: 1.15rem; color: var(--muted); }
+.weather-day-icon { width: 2.2rem; height: 2.2rem; margin: 0.3rem 0 0.1rem; }
+.weather-day-temp { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.weather-day-temp .min { display: none; }
+.weather-day-rain { font-size: 1.1rem; }
+.weather-day-min { display: inline; }
+.weather-day-rain-label { display: none; }
+
+/* ---------- Actualités ---------- */
+.section-title { font-size: 1.25rem; color: var(--ink); margin-bottom: 1rem; }
+.news-counter { font-weight: 600; color: var(--ink); letter-spacing: 0.1em; }
+
+.news { position: relative; }
+.news-progress { display: none; }
+
+.slide-body,
+.slide.no-image .slide-body {
+  justify-content: flex-start;
+  padding: 2.4rem 2.4rem 5.6rem;
+}
+.slide-meta { font-size: 1.2rem; gap: 1.2rem; color: var(--muted); }
+.slide-tag {
+  background: transparent;
+  border: 0.15rem solid var(--accent);
+  border-radius: 0.2rem;
+  padding: 0.35rem 0.8rem;
+  letter-spacing: 0.14em;
+}
+.slide-title,
+.slide.no-image .slide-title {
+  margin-top: auto;
+  font-size: 3.6rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.slide-text,
+.slide.no-image .slide-text { font-size: 1.55rem; line-height: 1.55; }
+
+/* Actu importante : même liseré rouge, étiquette pleine */
+.slide.important .slide-tag { border-color: var(--danger); }
+
+/* Segments de progression, en bas de la carte */
+.news-steps {
+  display: flex;
+  gap: 0.6rem;
+  position: absolute;
+  left: 2.4rem;
+  right: 2.4rem;
+  bottom: 2.4rem;
+}
+.news-steps span {
+  flex: 1;
+  height: 0.35rem;
+  background: var(--line);
+  transition: background 0.6s ease;
+}
+.news-steps span.active { background: var(--accent); }
+
+/* ---------- Infos pratiques ---------- */
+.infos-grid { gap: 0.8rem; }
+.info { padding: 1.1rem 1.6rem; gap: 1.4rem; }
+.info-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0;
+  background: none;
+}
+.info-title { font-size: 1.15rem; }
+.info-detail { font-size: 1.7rem; letter-spacing: -0.01em; margin-top: 0.1rem; }
+
+/* ---------- Pied de page ---------- */
+.footer { font-size: 1.1rem; }

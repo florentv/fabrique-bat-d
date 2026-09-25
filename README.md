@@ -18,7 +18,7 @@ Open-Meteo ─────météo────▶
 | `config.js` | Réglages techniques : coordonnées météo, liens des Google Sheets, horaires du thème nuit |
 | `data/*.csv` | Données d'exemple (utilisées si un lien est laissé vide dans `config.js`) et modèles d'import pour Google Sheets |
 | `sw.js` | Cache hors ligne : le site redémarre même sans Wi-Fi |
-| `fonts/` | Atkinson Hyperlegible et Fraunces (licence SIL OFL), hébergées localement |
+| `fonts/` | Atkinson Hyperlegible, Fraunces et Poppins (licence SIL OFL), hébergées localement |
 | `GUIDE-CONSEIL.md` | Fiche d'utilisation pour le conseil syndical |
 
 ## 1. Tester en local
@@ -32,6 +32,11 @@ Ouvrir http://localhost:8000. Dans Chrome, les outils de développement (mode ap
 Paramètres d'aperçu : `?slide=3` démarre sur la 3e actu, `?theme=nuit` ou `?theme=jour` force le thème.
 
 ## Thèmes graphiques
+
+| Thème | Style |
+|---|---|
+| `classique` (par défaut) | Ivoire, bronze, titres à empattements (Fraunces), texte Atkinson Hyperlegible |
+| `moderne` | Gris chaud, cuivre, sans-serif géométrique très grasse (Poppins), étiquettes au trait, progression des actus en segments |
 
 Le thème **classique** est toujours chargé. Un autre thème s'y superpose et ne redéfinit que ce qui change (couleurs, polices, arrondis, voire des règles de style).
 
@@ -49,6 +54,8 @@ Le thème **classique** est toujours chargé. Un autre thème s'y superpose et n
 | `config.js` | `style: "<nom>"` | Thème par défaut |
 
 Un nom inconnu, ou absent de la liste `styles`, ramène au thème classique.
+
+Pour les thèmes qui en ont besoin, la page fournit quelques éléments masqués par défaut dans `style.css` : le nom de la résidence découpé autour du tiret (`.brand-main`, `.brand-sep`, `.brand-sub`), les segments de progression des actus (`.news-steps`), et la mention « min » dans les prévisions (`.weather-day-min`).
 
 ## 2. Google Sheets
 
