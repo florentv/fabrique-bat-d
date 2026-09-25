@@ -1,0 +1,7 @@
+titre,texte,categorie,image,debut,fin,actif
+Ravalement de la façade côté cour,"Les échafaudages seront installés à partir du lundi 6 octobre, pour une durée d'environ 6 semaines. Merci de dégager vos balcons côté cour.",Travaux,data/demo-facade.svg,20/09/2026,20/11/2026,oui
+Assemblée générale annuelle,"Mardi 14 octobre à 19 h, salle municipale Bécon.
+La convocation et les documents ont été envoyés par le syndic. Pensez à votre pouvoir si vous ne pouvez pas venir.",Vie de la copro,,22/09/2026,14/10/2026,oui
+Fête des voisins d'automne,"Samedi 11 octobre à partir de 18 h dans le hall. Chacun apporte un plat ou une boisson à partager !",Événement,,25/09/2026,11/10/2026,oui
+Coupure d'eau programmée,"Jeudi 2 octobre de 9 h à 12 h pour l'entretien de la colonne principale.",Travaux,,24/09/2026,02/10/2026,oui
+Ancienne actu (masquée),Cette ligne est passée : elle ne s'affiche plus.,Vie de la copro,,01/06/2026,30/06/2026,oui

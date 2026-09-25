@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F4F1EA">
+  <title>Résidence — Affichage</title>
+  <link rel="preload" href="fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="screen" id="screen">
+
+    <header class="header">
+      <div class="brand">
+        <h1 class="brand-name" id="residence-name">Résidence</h1>
+        <p class="brand-address" id="residence-address"></p>
+      </div>
+      <div class="clock">
+        <div class="clock-time" id="clock-time">--:--</div>
+        <div class="clock-date" id="clock-date"></div>
+      </div>
+    </header>
+
+    <section class="weather card" id="weather" aria-label="Météo">
+      <div class="weather-now">
+        <div class="weather-icon" id="weather-icon"></div>
+        <div class="weather-main">
+          <div class="weather-temp" id="weather-temp">--°</div>
+          <div class="weather-desc" id="weather-desc">Chargement…</div>
+          <div class="weather-extra" id="weather-extra"></div>
+        </div>
+      </div>
+      <ol class="weather-days" id="weather-days"></ol>
+    </section>
+
+    <section class="news" aria-label="Actualités">
+      <div class="section-title">
+        <span>Actualités</span>
+        <span class="news-counter" id="news-counter"></span>
+      </div>
+      <div class="news-stage" id="news-stage"></div>
+      <div class="news-progress"><div class="news-progress-bar" id="news-progress-bar"></div></div>
+    </section>
+
+    <section class="infos" aria-label="Informations pratiques">
+      <div class="section-title"><span>Informations pratiques</span></div>
+      <ul class="infos-grid" id="infos-grid"></ul>
+    </section>
+
+    <footer class="footer">
+      <span id="status">Chargement…</span>
+      <span id="footer-note"></span>
+    </footer>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="icons.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
