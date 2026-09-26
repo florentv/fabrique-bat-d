@@ -1,18 +1,20 @@
 # Tablette Hall Batiment D
 ## Mode d'emploi
 
-Le mini-site affiché sur la tablette est relié à trois tableaux Google Sheets : 
-* **actus** qui permet d'ajouter/supprimer/modifier une actualité : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing 
-* **infos** qui permet de modifier les infos en bas de page : https://docs.google.com/spreadsheets/d/1TdVMvlzHhrDRHKBKn9zHS1B7fJAN5wGhc6XUUntArl8/edit?usp=sharing
-* **config** qui permet de modifier les paramètres d'affichage : https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing
+Le mini-site affiché sur la tablette est relié à **un Google Sheet** : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing
 
-Vous devez posséder un compte Google et avoir les autorisations de modifier chaque Google Sheets.
+Il contient trois onglets (en bas de l'écran) :
+* **actus** pour ajouter, supprimer ou modifier une actualité ;
+* **infos** pour modifier les informations pratiques ;
+* **config** pour modifier les paramètres d'affichage.
+
+Vous devez posséder un compte Google et avoir l'autorisation de modifier ce Google Sheet.
 
 Les changements apparaissent sur l'écran **en 5 minutes au plus**. Il n'y a rien d'autre à faire.
 
 ---
 
-## Ajouter une actualité (classeur `actus`)
+## Ajouter une actualité (onglet `actus`)
 
 Ajoutez une ligne :
 
@@ -38,7 +40,7 @@ Ajoutez une ligne :
 
 ---
 
-## Modifier les informations pratiques (classeur `infos`)
+## Modifier les informations pratiques (onglet `infos`)
 
 Une ligne par bloc :
 
@@ -53,7 +55,7 @@ Une ligne par bloc :
 
 ---
 
-## Réglages généraux (classeur `config`)
+## Réglages généraux (onglet `config`)
 
 | cle | valeur |
 |---|---|
@@ -61,8 +63,11 @@ Une ligne par bloc :
 | adresse | Sous-titre sous le nom |
 | duree_actu | Durée d'affichage de chaque actu, en secondes (12 conseillé) |
 | message_pied | Petite phrase en bas de l'écran |
+| style | Facultatif : thème graphique, `moderne` ou `classique` |
+| nuit_debut / nuit_fin | Facultatif : heures du thème sombre (par défaut 21 et 7) |
+| latitude / longitude | Facultatif : position de l'immeuble pour la météo |
 
-⚠️ Ne modifiez pas la colonne `cle`, gardez la ligne d'en-tête (1re ligne) de chaque classeur, et n'ajoutez pas d'onglet avant le premier : c'est lui qui est lu.
+⚠️ Ne renommez pas les onglets `actus`, `infos` et `config`, gardez leur ligne d'en-tête (1re ligne) et ne modifiez pas la colonne `cle`. Si un onglet est introuvable ou incomplet, un message rouge l'indique en bas de l'écran.
 
 ---
 
@@ -83,10 +88,13 @@ Ce dossier est administré par Florent Vié. Le contacter pour toute question ou
 
 ### Mise à jour du site
 
-Le mini-site affiché sur la tablette est relié à trois tableaux Google Sheets : 
-* **actus** qui permet d'ajouter/supprimer/modifier une actualité : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing 
-* **infos** qui permet de modifier les infos en bas de page : https://docs.google.com/spreadsheets/d/1TdVMvlzHhrDRHKBKn9zHS1B7fJAN5wGhc6XUUntArl8/edit?usp=sharing
-* **config** qui permet de modifier les paramètres d'affichage : https://docs.google.com/spreadsheets/d/1LIXl29jjvBakqBnDMfwQDIEACr8cOAhUGn4Nhtiyh4c/edit?usp=sharing
+Le contenu vient d'un seul Google Sheet à trois onglets (`actus`, `infos`, `config`) : https://docs.google.com/spreadsheets/d/1w7kjQKCnq_MkaLyQpqJHIDLT8yg6XEvDt-EnflnZqY0/edit?usp=sharing
+
+Le site utilise le Google Sheet indiqué dans `config.js`, ou celui précisé dans l'adresse de la tablette (`…/?sheet=<lien>`).
+
+### Autres immeubles
+
+D'autres immeubles peuvent installer le même affichage avec leur propre copie du site et leur propre Google Sheet. Le mode d'emploi est sur la page https://florentv.github.io/fabrique-bat-d/installation.html
 
 ### Rafraîchissement
 
@@ -94,7 +102,7 @@ La page reste ouverte en permanence et relit ses sources en arrière-plan, sans 
 
 | Quoi | Quand | Réglage (`config.js`) |
 |---|---|---|
-| Actus, infos pratiques, réglages (Google Sheets) | toutes les 5 min | `refreshDataMinutes` |
+| Actus, infos pratiques, réglages (Google Sheet) | toutes les 5 min | `refreshDataMinutes` |
 | Météo (Open-Meteo, gratuit et sans clé d'API) | toutes les 15 min | `refreshWeatherMinutes` |
 | Code du site (après un `git push`) | au rechargement complet de la page, chaque nuit à 3 h | `reloadHour` |
 | Heure et date | à la minute | — |
@@ -106,7 +114,8 @@ En cas d'erreur ou de coupure réseau, les dernières données valides restent a
 ### Affichage
 
 - **Actus** : seules celles qui sont actives et dans leur période (`debut` ≤ aujourd'hui ≤ `fin`) sont affichées. Elles apparaissent et disparaissent le jour dit, sans intervention. Un texte trop long est automatiquement réduit pour tenir sur l'écran.
-- **Thème nuit** : de 21 h à 7 h.
+- **Thème nuit** : de 21 h à 7 h (modifiable dans l'onglet `config`).
+- **Heure exacte** : l'horloge de la tablette dérive ; le site la corrige automatiquement avec l'heure des serveurs Google.
 - **Protection de l'écran** : léger décalage de quelques pixels toutes les 10 min, pour éviter que l'image se marque sur la dalle.
 
 ## Ancien pdf
