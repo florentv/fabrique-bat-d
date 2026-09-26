@@ -19,6 +19,9 @@ window.CONFIG = {
   styles: ["classique", "moderne"],
   style: "moderne",
 
+  // Fuseau horaire de l'immeuble, utilisé pour l'heure et les dates quel que soit le réglage de la tablette.
+  timeZone: "Europe/Paris",
+
   refreshDataMinutes: 5,      // relecture du Google Sheet
   refreshWeatherMinutes: 15,  // relecture de la météo
   reloadHour: 3,              // rechargement complet de la page chaque nuit (heure)

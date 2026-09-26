@@ -76,20 +76,19 @@
     return objects;
   }
 
-  // Accepte JJ/MM/AAAA, JJ/MM/AA et AAAA-MM-JJ.
+  // Accepte JJ/MM/AAAA, JJ/MM/AA et AAAA-MM-JJ. Renvoie ce jour à midi UTC,
+  // qui tombe le même jour calendaire dans le fuseau de l'immeuble.
   function parseDate(s) {
     if (!s) return null;
     let m = s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);
     if (m) {
       const y = m[3].length === 2 ? 2000 + +m[3] : +m[3];
-      return new Date(y, +m[2] - 1, +m[1]);
+      return new Date(Date.UTC(y, +m[2] - 1, +m[1], 12));
     }
     m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+    if (m) return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12));
     return null;
   }
-
-  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
   const isYes = (v) => /^(oui|o|yes|y|x|1|vrai|true)$/i.test(String(v).trim());
   const isNo = (v) => /^(non|n|no|0|faux|false)$/i.test(String(v).trim());
@@ -101,10 +100,23 @@
     return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w1600` : url;
   }
 
-  const fmtTime = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  const fmtDate = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-  const fmtShort = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" });
-  const fmtDay = new Intl.DateTimeFormat("fr-FR", { weekday: "short" });
+  // Heures et dates dans le fuseau de l'immeuble, quel que soit le fuseau réglé sur la tablette
+  // (celle du hall est en UTC et ses réglages ne sont pas accessibles).
+  const TZ = C.timeZone || "Europe/Paris";
+  const fmtTime = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+  const fmtDate = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, weekday: "long", day: "numeric", month: "long" });
+  const fmtShort = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, day: "numeric", month: "long" });
+  const fmtDay = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, weekday: "short" });
+  const fmtParts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  });
+
+  // Date et heure d'un instant dans le fuseau de l'immeuble ; day = AAAAMMJJ, pour comparer des jours.
+  function zoned(date) {
+    const p = Object.fromEntries(fmtParts.formatToParts(date).map((x) => [x.type, +x.value]));
+    return { hour: p.hour % 24, minute: p.minute, day: p.year * 10000 + p.month * 100 + p.day };
+  }
 
   // ---------- Heure corrigée ----------
   // L'horloge de la tablette peut dériver et ses réglages ne sont pas accessibles.
@@ -237,12 +249,13 @@
   let lastMinute = -1;
   function tickClock() {
     const t = now();
-    if (t.getMinutes() === lastMinute) return;
-    lastMinute = t.getMinutes();
+    const z = zoned(t);
+    if (z.minute === lastMinute) return;
+    lastMinute = z.minute;
     $("clock-time").textContent = fmtTime.format(t);
     $("clock-date").textContent = fmtDate.format(t);
 
-    const h = t.getHours();
+    const h = z.hour;
     const nightStart = numSetting("nuit_debut", C.nightStart);
     const nightEnd = numSetting("nuit_fin", C.nightEnd);
     const night = nightStart > nightEnd
@@ -326,7 +339,7 @@
       `<span>Ressenti ${Math.round(cur.apparent_temperature)}°</span><span>Vent ${Math.round(cur.wind_speed_10m)} km/h</span>`;
 
     const days = d.daily.time.map((t, i) => ({
-      date: new Date(`${t}T12:00:00`),
+      date: new Date(`${t}T12:00:00Z`),   // midi UTC : même jour dans le fuseau de l'immeuble
       code: d.daily.weather_code[i],
       max: Math.round(d.daily.temperature_2m_max[i]),
       min: Math.round(d.daily.temperature_2m_min[i]),
@@ -347,12 +360,12 @@
   const isImportant = (n) => normalizeKey(n.categorie || "") === "important";
 
   function setNews(rows) {
-    const today = startOfDay(now());
+    const today = zoned(now()).day;
     const news = rows.filter((r) => {
       if (!r.titre || isNo(r.actif)) return false;
       const start = parseDate(r.debut), end = parseDate(r.fin);
-      if (start && start > today) return false;
-      if (end && end < today) return false;
+      if (start && zoned(start).day > today) return false;
+      if (end && zoned(end).day < today) return false;
       return true;
     });
     // Les actus importantes passent en tête (l'ordre du Sheet est conservé à l'intérieur de chaque groupe).
