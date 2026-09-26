@@ -108,3 +108,6 @@ En cas d'erreur ou de coupure réseau, les dernières données valides restent a
 - **Actus** : seules celles qui sont actives et dans leur période (`debut` ≤ aujourd'hui ≤ `fin`) sont affichées. Elles apparaissent et disparaissent le jour dit, sans intervention. Un texte trop long est automatiquement réduit pour tenir sur l'écran.
 - **Thème nuit** : de 21 h à 7 h.
 - **Protection de l'écran** : léger décalage de quelques pixels toutes les 10 min, pour éviter que l'image se marque sur la dalle.
+
+## Ancien pdf
+Stocké sur l'ordinateur du local à l'adresse : 192.168.1.241:8080/batiment-d/
