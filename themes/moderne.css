@@ -87,7 +87,7 @@
 .weather-day-temp { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; }
 .weather-day-temp .min { display: none; }
 .weather-day-rain { font-size: 1.1rem; }
-.weather-day-min { display: inline; }
+.weather-day-min { display: block; }   /* min sur une ligne, probabilité de pluie en dessous */
 .weather-day-rain-label { display: none; }
 
 /* ---------- Actualités ---------- */

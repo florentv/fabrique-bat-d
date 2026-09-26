@@ -338,7 +338,7 @@
         <div class="weather-day-name">${i === 0 ? "Auj." : escapeHtml(fmtDay.format(day.date).replace(".", ""))}</div>
         <div class="weather-day-icon">${describe(day.code).icon}</div>
         <div class="weather-day-temp">${day.max}° <span class="min">${day.min}°</span></div>
-        <div class="weather-day-rain">${day.rain != null ? `<span class="weather-day-min">min ${day.min}° · </span><span class="weather-day-rain-label">Pluie </span>${day.rain} %` : ""}</div>
+        <div class="weather-day-rain">${day.rain != null ? `<span class="weather-day-min">min ${day.min}°</span><span class="weather-day-rain-label">Pluie </span>${day.rain}\u00a0%` : ""}</div>
       </li>`).join("");
   }
 
