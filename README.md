@@ -2,7 +2,7 @@
 
 Mini-site affiché en plein écran sur la tablette Android (portrait, 1080×1920) :
 heure, météo, actualités en carrousel, informations pratiques.
-Le contenu est géré par le conseil syndical dans des **Google Sheets**.
+Le contenu est géré par le conseil syndical dans un **Google Sheet**. Le site peut servir à plusieurs immeubles (voir « Installer pour un autre immeuble »).
 
 ```
 Google Sheet (CS) ──CSV──▶ site statique (GitHub Pages) ──▶ tablette (Fully Kiosk Browser)
@@ -15,8 +15,10 @@ Open-Meteo ─────météo────▶
 |---|---|
 | `index.html`, `style.css`, `app.js`, `icons.js` | Le site (`style.css` : mise en page commune à tous les thèmes) |
 | `themes/` | Thèmes graphiques : `classique.css` (base, toujours chargée), `moderne.css` (par défaut), `_modele.css` (point de départ pour un nouveau thème) |
-| `config.js` | Réglages techniques : coordonnées météo, liens des Google Sheets, horaires du thème nuit |
-| `data/*.csv` | Données d'exemple (utilisées si un lien est laissé vide dans `config.js`) et modèles d'import pour Google Sheets |
+| `config.js` | Réglages par défaut : Google Sheet, coordonnées météo, thème, horaires du thème nuit |
+| `installation.html`, `installation.js` | Page d'installation pour un nouvel immeuble : vérification du Sheet, adresse et QR code de la tablette |
+| `vendor/qrcode.js` | Générateur de QR codes (qrcode-generator 1.4.4, licence MIT) |
+| `data/*.csv` | Données d'exemple (utilisées sans Google Sheet) et modèles d'import des trois onglets |
 | `sw.js` | Cache hors ligne : le site redémarre même sans Wi-Fi |
 | `fonts/` | Atkinson Hyperlegible, Fraunces et Poppins (licence SIL OFL), hébergées localement |
 | `GUIDE-CONSEIL.md` | Fiche d'utilisation pour le conseil syndical |
@@ -50,32 +52,46 @@ Le thème **classique** est toujours chargé. Un autre thème s'y superpose et n
 | Où | Comment | Usage |
 |---|---|---|
 | Adresse | `?style=<nom>` (combinable avec `&theme=nuit`) | Tester sans rien modifier |
-| Classeur `config` | ligne `style` \| `<nom>` | Changer le thème de la tablette, en 1 minute, sans `git push` |
+| Onglet `config` | ligne `style` \| `<nom>` | Changer le thème de la tablette, sans `git push` |
 | `config.js` | `style: "<nom>"` | Thème par défaut |
 
 Un nom inconnu, ou absent de la liste `styles`, ramène au thème classique.
 
 Pour les thèmes qui en ont besoin, la page fournit quelques éléments masqués par défaut dans `style.css` : le nom de la résidence découpé autour du tiret (`.brand-main`, `.brand-sep`, `.brand-sub`), les segments de progression des actus (`.news-steps`), et la mention « min » dans les prévisions (`.weather-day-min`).
 
-## 2. Google Sheets
+## 2. Google Sheet
 
-Le contenu est réparti dans **trois classeurs Google Sheets** (un par type de contenu) :
+Le contenu de chaque immeuble tient dans **un seul Google Sheet**, avec trois onglets nommés exactement :
 
-| Classeur | Modèle d'import |
-|---|---|
-| actus | `data/actus.csv` |
-| infos | `data/infos.csv` |
-| config | `data/config.csv` |
+| Onglet | Contenu | Colonnes obligatoires | Modèle d'import |
+|---|---|---|---|
+| `actus` | Actualités du carrousel | `titre`, `texte`, `debut`, `fin` | `data/actus.csv` |
+| `infos` | Informations pratiques | `icone`, `titre`, `detail` | `data/infos.csv` |
+| `config` | Réglages de l'immeuble (`cle` / `valeur`) | `cle`, `valeur` | `data/config.csv` |
 
-Pour chaque classeur :
-1. *Fichier › Importer* le modèle correspondant. Seul le **premier onglet** du classeur est lu.
+Onglet `config` : `nom_residence`, `adresse`, `duree_actu`, `message_pied`, et en option `style`, `latitude`, `longitude` (météo), `nuit_debut`, `nuit_fin`. Sans ces lignes facultatives, les valeurs de `config.js` s'appliquent.
+
+Mise en place :
+1. Créer le Google Sheet, puis pour chaque modèle : *Fichier › Importer › Importer*, option **« Insérer de nouvelles feuilles »**. L'onglet créé prend le nom du fichier (`actus`, `infos`, `config`).
 2. *Partager* › Accès général : **« Tous les utilisateurs disposant du lien » (Lecteur)**. Ajouter les membres du CS en tant qu'**éditeurs**.
-3. Copier le lien de partage dans `config.js` (`sheets.actus`, `sheets.infos`, `sheets.config`). Le site le convertit lui-même en CSV : pas besoin de « Publier sur le web ».
+3. Indiquer le Sheet au site, au choix :
+   - dans l'adresse de la tablette : `…/?sheet=<lien de partage ou identifiant>` (prioritaire) ;
+   - dans `config.js` : `sheet: "<lien de partage>"` (utilisé quand l'adresse ne précise rien).
 
-Dans `actus`, ajouter une validation de données sur `actif` (liste `oui,non`) et saisir les dates au format JJ/MM/AAAA.
+La page **`installation.html`** vérifie un Sheet (partage, onglets, colonnes) et fournit l'adresse de la tablette avec un QR code.
 
-> ⚠️ Toute personne qui a le lien peut lire les classeurs. N'y mettez rien qui ne pourrait pas être affiché dans le hall.
-> Le site relit les classeurs toutes les 5 minutes : une modification apparaît donc en 5 minutes au plus.
+Si un onglet manque ou est mal structuré, le bas de l'écran l'indique en rouge (par ex. « Onglet « infos » introuvable ou incomplet »). Les dernières données valides restent affichées. Cette vérification est indispensable, car Google renvoie le premier onglet quand un nom d'onglet n'existe pas.
+
+> ⚠️ Toute personne qui a le lien peut lire le Sheet. N'y mettez rien qui ne pourrait pas être affiché dans le hall.
+
+## Installer pour un autre immeuble
+
+Chaque immeuble a sa propre copie du site (*fork* GitHub) et son propre Google Sheet. Le mode d'emploi pas à pas est sur la page `installation.html` du site. En résumé :
+1. *Fork* du dépôt, puis activer GitHub Pages sur la copie.
+2. Créer le Google Sheet de l'immeuble (voir ci-dessus), et le vérifier avec `installation.html`.
+3. Mettre sur la tablette l'adresse fournie : `https://<compte>.github.io/<dépôt>/?sheet=<identifiant>`.
+
+Les copies ne modifient aucun fichier : tout ce qui est propre à l'immeuble est dans le Sheet et dans l'adresse. Le bouton **Sync fork** de GitHub récupère donc les améliorations sans conflit. Pour proposer un Sheet modèle à copier en un clic, renseigner `sheetModele` dans `config.js`.
 
 ## 3. Mise en ligne (GitHub Pages)
 

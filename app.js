@@ -12,6 +12,16 @@
   // Test uniquement : ?horloge=300 simule une tablette en avance de 300 s (négatif = en retard).
   const simulatedSkew = (+params.get("horloge") || 0) * 1000;
 
+  // Google Sheet de l'immeuble : ?sheet=<lien ou identifiant> dans l'adresse, sinon config.js.
+  // Sans Sheet, le site affiche les données d'exemple du dossier data/.
+  function sheetIdFrom(value) {
+    const v = String(value || "").trim();
+    const m = v.match(/spreadsheets\/d\/([\w-]{20,})/);
+    if (m) return m[1];
+    return /^[\w-]{20,}$/.test(v) ? v : "";
+  }
+  const SHEET_ID = sheetIdFrom(params.get("sheet")) || sheetIdFrom(C.sheet);
+
   const state = {
     settings: {},
     news: [],
@@ -20,6 +30,7 @@
     slideTimer: null,
     lastSync: null,
     offline: false,
+    problem: "",       // erreur de structure du Sheet, affichée en pied de page
   };
 
   // ---------- Utilitaires ----------
@@ -58,9 +69,11 @@
     const [header, ...rows] = parseCsv(text.replace(/^﻿/, ""));
     if (!header) return [];
     const keys = header.map(normalizeKey);
-    return rows
+    const objects = rows
       .filter((r) => r.some((v) => v.trim() !== ""))
       .map((r) => Object.fromEntries(keys.map((k, i) => [k, (r[i] ?? "").trim()])));
+    objects.columns = keys;
+    return objects;
   }
 
   // Accepte JJ/MM/AAAA, JJ/MM/AA et AAAA-MM-JJ.
@@ -134,30 +147,50 @@
     try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; }
   }
 
-  // Un lien de partage Google Sheets (…/d/<id>/edit) est converti en export CSV lisible par le navigateur.
-  // headers=1 : la 1re ligne est toujours l'en-tête (sinon Google la devine, parfois mal).
-  function sheetCsvUrl(url) {
-    const m = url.match(/docs\.google\.com\/spreadsheets\/d\/([\w-]{20,})/);
-    return m ? `https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?tqx=out:csv&headers=1` : url;
+  // Colonnes obligatoires de chaque onglet. Google renvoie le 1er onglet quand un nom d'onglet
+  // n'existe pas : cette vérification évite d'afficher, par exemple, les actus à la place des infos.
+  const REQUIRED_COLUMNS = {
+    actus: ["titre", "texte", "debut", "fin"],
+    infos: ["icone", "titre", "detail"],
+    config: ["cle", "valeur"],
+  };
+
+  // Export CSV d'un onglet, lisible par le navigateur. headers=1 : la 1re ligne est toujours l'en-tête.
+  function tabUrl(name) {
+    return SHEET_ID
+      ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(name)}`
+      : `data/${name}.csv`;
   }
 
   async function loadSheet(name) {
-    const url = C.sheets[name] ? sheetCsvUrl(C.sheets[name]) : `data/${name}.csv`;
+    const cacheKey = `sheet:${SHEET_ID || "demo"}:${name}`;
     try {
-      const rows = csvToObjects(await fetchText(url));
-      if (!rows.length) throw new Error(`onglet ${name} vide`);
-      saveCache(`sheet:${name}`, rows);
+      const rows = csvToObjects(await fetchText(tabUrl(name)));
+      const missing = REQUIRED_COLUMNS[name].filter((c) => !rows.columns.includes(c));
+      if (missing.length) {
+        const problem = `Onglet « ${name} » introuvable ou incomplet (colonnes manquantes : ${missing.join(", ")})`;
+        const cached = readCache(cacheKey);
+        return { rows: cached ? cached.value : [], fresh: false, problem };
+      }
+      saveCache(cacheKey, rows);
       return { rows, fresh: true };
     } catch (err) {
       console.warn("Lecture impossible, utilisation du cache :", err);
-      const cached = readCache(`sheet:${name}`);
+      const cached = readCache(cacheKey);
       return { rows: cached ? cached.value : [], fresh: false };
     }
+  }
+
+  // Réglage numérique de l'onglet config (virgule décimale acceptée), sinon valeur par défaut.
+  function numSetting(key, fallback) {
+    const v = parseFloat(String(state.settings[key] ?? "").replace(",", "."));
+    return isNaN(v) ? fallback : v;
   }
 
   async function refreshData() {
     const [settings, actus, infos] = await Promise.all(
       ["config", "actus", "infos"].map(loadSheet));
+    state.problem = [settings, actus, infos].map((r) => r.problem).filter(Boolean)[0] || "";
 
     state.settings = Object.fromEntries(
       settings.rows.map((r) => [normalizeKey(r.cle || ""), r.valeur || ""]));
@@ -166,7 +199,7 @@
     renderInfos(infos.rows);
 
     const ok = settings.fresh && actus.fresh && infos.fresh;
-    state.offline = !ok;
+    state.offline = !ok && !state.problem;
     if (ok) state.lastSync = now();
     renderStatus();
   }
@@ -210,9 +243,11 @@
     $("clock-date").textContent = fmtDate.format(t);
 
     const h = t.getHours();
-    const night = C.nightStart > C.nightEnd
-      ? h >= C.nightStart || h < C.nightEnd
-      : h >= C.nightStart && h < C.nightEnd;
+    const nightStart = numSetting("nuit_debut", C.nightStart);
+    const nightEnd = numSetting("nuit_fin", C.nightEnd);
+    const night = nightStart > nightEnd
+      ? h >= nightStart || h < nightEnd
+      : h >= nightStart && h < nightEnd;
     document.body.classList.toggle("night", forcedTheme ? forcedTheme === "nuit" : night);
 
     // Rechargement complet quotidien (libère la mémoire, récupère les mises à jour du site).
@@ -228,7 +263,11 @@
 
   function renderStatus() {
     const el = $("status");
-    if (state.offline) {
+    if (state.problem) {
+      // Sheet mal structuré : message explicite pour la personne qui installe (prend toute la largeur).
+      el.innerHTML = `<span class="offline">${escapeHtml(state.problem)}</span>`;
+      $("footer-note").textContent = "";
+    } else if (state.offline) {
       const since = state.lastSync ? ` — infos du ${fmtShort.format(state.lastSync)} à ${fmtTime.format(state.lastSync)}` : "";
       el.innerHTML = `<span class="offline">Hors ligne</span>${escapeHtml(since)}`;
     } else if (state.lastSync) {
@@ -260,7 +299,7 @@
 
   async function refreshWeather() {
     const url = "https://api.open-meteo.com/v1/forecast"
-      + `?latitude=${C.latitude}&longitude=${C.longitude}`
+      + `?latitude=${numSetting("latitude", C.latitude)}&longitude=${numSetting("longitude", C.longitude)}`
       + "&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m"
       + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"
       + "&timezone=Europe%2FParis&forecast_days=4";
@@ -428,8 +467,8 @@
   applyStyle();
   tickClock();
   setInterval(tickClock, 1000);
-  refreshData();
-  refreshWeather();
+  // La météo attend le 1er chargement du Sheet, qui peut préciser la position de l'immeuble.
+  refreshData().finally(refreshWeather);
   setInterval(refreshData, C.refreshDataMinutes * MIN);
   setInterval(refreshWeather, C.refreshWeatherMinutes * MIN);
 

@@ -3,3 +3,8 @@ nom_residence,Résidence Paul Bert
 adresse,"12 rue Paul Bert, Courbevoie"
 duree_actu,12
 message_pied,Contact du conseil syndical : cs.paulbert@exemple.fr
+latitude,48.9034
+longitude,2.2597
+style,moderne
+nuit_debut,21
+nuit_fin,7
