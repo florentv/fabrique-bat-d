@@ -9,6 +9,8 @@
   const params = new URLSearchParams(location.search);
   const forcedTheme = params.get("theme");
   const forcedStyle = params.get("style");
+  // Test uniquement : ?horloge=300 simule une tablette en avance de 300 s (négatif = en retard).
+  const simulatedSkew = (+params.get("horloge") || 0) * 1000;
 
   const state = {
     settings: {},
@@ -91,12 +93,37 @@
   const fmtShort = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" });
   const fmtDay = new Intl.DateTimeFormat("fr-FR", { weekday: "short" });
 
+  // ---------- Heure corrigée ----------
+  // L'horloge de la tablette peut dériver et ses réglages ne sont pas accessibles.
+  // On mesure l'écart avec l'heure des serveurs (en-tête Date des réponses) et on le compense.
+
+  const deviceNow = () => Date.now() + simulatedSkew;
+  const clock = { offset: 0, samples: [] };
+  try { clock.offset = +localStorage.getItem("clockOffset") || 0; } catch (e) {}
+
+  // Heure exacte, à utiliser partout à la place de new Date().
+  const now = () => new Date(deviceNow() + clock.offset);
+
+  function recordServerTime(res, sentAt, receivedAt) {
+    const header = res.headers.get("Date");
+    const server = header ? Date.parse(header) : NaN;
+    if (isNaN(server)) return;
+    // L'en-tête est à la seconde près : on vise le milieu de la seconde et du trajet aller-retour.
+    const sample = server + 500 - (sentAt + receivedAt) / 2;
+    clock.samples = [...clock.samples, sample].slice(-7);
+    const sorted = [...clock.samples].sort((a, b) => a - b);
+    clock.offset = Math.round(sorted[Math.floor(sorted.length / 2)]);  // médiane : ignore les mesures aberrantes
+    try { localStorage.setItem("clockOffset", String(clock.offset)); } catch (e) {}
+  }
+
   // ---------- Chargement des données (avec cache hors ligne) ----------
 
   async function fetchText(url) {
     const sep = url.includes("?") ? "&" : "?";
+    const sentAt = deviceNow();
     const res = await fetch(`${url}${sep}t=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`${res.status} ${url}`);
+    recordServerTime(res, sentAt, deviceNow());
     return res.text();
   }
 
@@ -140,7 +167,7 @@
 
     const ok = settings.fresh && actus.fresh && infos.fresh;
     state.offline = !ok;
-    if (ok) state.lastSync = new Date();
+    if (ok) state.lastSync = now();
     renderStatus();
   }
 
@@ -176,13 +203,13 @@
 
   let lastMinute = -1;
   function tickClock() {
-    const now = new Date();
-    if (now.getMinutes() === lastMinute) return;
-    lastMinute = now.getMinutes();
-    $("clock-time").textContent = fmtTime.format(now);
-    $("clock-date").textContent = fmtDate.format(now);
+    const t = now();
+    if (t.getMinutes() === lastMinute) return;
+    lastMinute = t.getMinutes();
+    $("clock-time").textContent = fmtTime.format(t);
+    $("clock-date").textContent = fmtDate.format(t);
 
-    const h = now.getHours();
+    const h = t.getHours();
     const night = C.nightStart > C.nightEnd
       ? h >= C.nightStart || h < C.nightEnd
       : h >= C.nightStart && h < C.nightEnd;
@@ -281,7 +308,7 @@
   const isImportant = (n) => normalizeKey(n.categorie || "") === "important";
 
   function setNews(rows) {
-    const today = startOfDay(new Date());
+    const today = startOfDay(now());
     const news = rows.filter((r) => {
       if (!r.titre || isNo(r.actif)) return false;
       const start = parseDate(r.debut), end = parseDate(r.fin);

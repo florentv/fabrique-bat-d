@@ -104,6 +104,8 @@ La page reste ouverte en permanence et relit ses sources en arrière-plan, sans 
 | Code du site (après un `git push`) | au rechargement complet de la page, chaque nuit à 3 h | `reloadHour` |
 | Heure et date | à la minute | — |
 
+**Heure exacte** : l'horloge de la tablette peut dériver, et ses réglages ne sont pas accessibles. À chaque lecture des Google Sheets, le site compare l'heure de la tablette à celle du serveur Google (en-tête `Date` de la réponse) et corrige l'affichage, à la seconde près. L'écart est mémorisé pour rester valable hors ligne. Le thème nuit, le rechargement de 3 h et les dates des actus utilisent aussi cette heure corrigée. Pour tester : `?horloge=300` simule une tablette en avance de 5 minutes.
+
 Une modification dans un Google Sheet apparaît donc sur l'écran en 5 minutes au plus. Chaque lecture contourne les caches, pour ne jamais récupérer une ancienne version.
 
 En cas d'erreur ou de coupure réseau, les dernières données valides restent affichées et le pied de page indique « Hors ligne ». L'affichage reprend tout seul au retour de la connexion.
