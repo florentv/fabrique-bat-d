@@ -66,6 +66,7 @@ Une ligne par bloc :
 | style | Facultatif : thème graphique, `moderne` ou `classique` |
 | nuit_debut / nuit_fin | Facultatif : heures du thème sombre (par défaut 21 et 7) |
 | latitude / longitude | Facultatif : position de l'immeuble pour la météo |
+| gestes | Facultatif : `oui` autorise le zoom et le défilement au doigt sur l'écran. Par défaut (`non` ou ligne absente), ils sont bloqués pour qu'un passant ne dérègle pas l'affichage |
 
 ⚠️ Ne renommez pas les onglets `actus`, `infos` et `config`, gardez leur ligne d'en-tête (1re ligne) et ne modifiez pas la colonne `cle`. Si un onglet est introuvable ou incomplet, un message rouge l'indique en bas de l'écran.
 

@@ -69,7 +69,7 @@ Le contenu de chaque immeuble tient dans **un seul Google Sheet**, avec trois on
 | `infos` | Informations pratiques | `icone`, `titre`, `detail` | `data/infos.csv` |
 | `config` | Réglages de l'immeuble (`cle` / `valeur`) | `cle`, `valeur` | `data/config.csv` |
 
-Onglet `config` : `nom_residence`, `adresse`, `duree_actu`, `message_pied`, et en option `style`, `latitude`, `longitude` (météo), `nuit_debut`, `nuit_fin`. Sans ces lignes facultatives, les valeurs de `config.js` s'appliquent.
+Onglet `config` : `nom_residence`, `adresse`, `duree_actu`, `message_pied`, et en option `style`, `latitude`, `longitude` (météo), `nuit_debut`, `nuit_fin`, `gestes` (`oui` pour autoriser le zoom et le défilement tactiles, bloqués par défaut ; si l'écran reste zoomé plus de 2 minutes malgré le blocage, la page se recharge). Sans ces lignes facultatives, les valeurs de `config.js` s'appliquent.
 
 Mise en place :
 1. Créer le Google Sheet, puis pour chaque modèle : *Fichier › Importer › Importer*, option **« Insérer de nouvelles feuilles »**. L'onglet créé prend le nom du fichier (`actus`, `infos`, `config`).

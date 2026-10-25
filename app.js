@@ -232,9 +232,23 @@
     document.documentElement.dataset.style = name;
   }
 
+  // Gestes tactiles (zoom, défilement) : désactivés par défaut, l'écran étant en libre accès.
+  // Ligne « gestes » = oui dans l'onglet config pour les autoriser.
+  const LOCKED_VIEWPORT = document.querySelector('meta[name="viewport"]').content;
+  const gesturesAllowed = () => isYes(state.settings.gestes || "");
+
+  function applyGestures() {
+    const allowed = gesturesAllowed();
+    document.documentElement.classList.toggle("gestes", allowed);
+    document.querySelector('meta[name="viewport"]').content = allowed
+      ? "width=device-width, initial-scale=1, viewport-fit=cover"
+      : LOCKED_VIEWPORT;
+  }
+
   function renderSettings() {
     const s = state.settings;
     applyStyle();
+    applyGestures();
     const name = s.nom_residence || "Résidence";
     // « La Fabrique - Bâtiment D » : chaque partie dans son span, pour que les thèmes puissent les distinguer.
     const [main, sub] = name.split(/\s+[-–—]\s+/, 2);
@@ -247,6 +261,7 @@
   }
 
   let lastMinute = -1;
+  let zoomedMinutes = 0;
   function tickClock() {
     const t = now();
     const z = zoned(t);
@@ -265,6 +280,12 @@
 
     // Rechargement complet quotidien (libère la mémoire, récupère les mises à jour du site).
     if (h === C.reloadHour && Date.now() - startedAt > 2 * 60 * MIN) location.reload();
+
+    // Filet de sécurité : si un passant a zoomé l'écran (malgré l'interdiction, par ex. option
+    // d'accessibilité « forcer le zoom »), on recharge la page après 2 minutes pour revenir à l'échelle 1.
+    const vv = window.visualViewport;
+    zoomedMinutes = vv && vv.scale > 1.05 && !gesturesAllowed() ? zoomedMinutes + 1 : 0;
+    if (zoomedMinutes >= 2) location.reload();
 
     // Léger décalage de l'écran toutes les 10 min pour limiter le marquage de la dalle.
     if (lastMinute % 10 === 0) {
